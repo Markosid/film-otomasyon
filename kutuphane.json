@@ -21,7 +21,11 @@
    ],
    "altyazi": "subs/sintel_tr.srt",
    "ses": "tr-TR-EmelNeural",
-   "url": "https://archive.org/download/Sintel/sintel-2048-stereo.mp4"
+   "url": "https://archive.org/download/Sintel/sintel-2048-stereo.mp4",
+   "tur": "Fantastik / Macera",
+   "puan": 9,
+   "ozet": "Yalnız bir kız, çatıda bulduğu yaralı bir yavru ejderhayla dost olur. Ejderha bir gün kaçırılınca onu bulmak için tehlikeli bir yolculuğa çıkar.",
+   "etiketler": "#fantastik #ejderha"
   },
   {
    "ad": "Sprite Fright",
@@ -43,7 +47,11 @@
    ],
    "altyazi": "subs/sf_tr.srt",
    "ses": "en-US-BrianMultilingualNeural",
-   "url": "https://archive.org/download/sprite-fright/Sprite%20Fright%20-%20Open%20Movie%20by%20Blender%20Studio-804p.mp4"
+   "url": "https://archive.org/download/sprite-fright/Sprite%20Fright%20-%20Open%20Movie%20by%20Blender%20Studio-804p.mp4",
+   "tur": "Korku / Komedi",
+   "puan": 8,
+   "ozet": "Bir grup genç ormana kamp yapmaya gelir ve doğaya hiç saygı göstermez. Ama ormanın küçük sakinleri bunu yanlarına bırakmayacaktır.",
+   "etiketler": "#korku #komedi"
   },
   {
    "ad": "Tears of Steel",
@@ -65,7 +73,11 @@
    ],
    "altyazi": "subs/TOS-tr.srt",
    "ses": "en-US-BrianMultilingualNeural",
-   "url": "https://archive.org/download/Tears-of-Steel/tears_of_steel_720p.mov"
+   "url": "https://archive.org/download/Tears-of-Steel/tears_of_steel_720p.mov",
+   "tur": "Bilim Kurgu / Aksiyon",
+   "puan": 8,
+   "ozet": "Robotların ele geçirdiği Amsterdam'da bir grup bilim insanı son bir umuda sarılır: dünyanın sonunu başlatan o ayrılık anını değiştirmek.",
+   "etiketler": "#bilimkurgu #robot"
   },
   {
    "ad": "Cosmos Laundromat",
@@ -86,7 +98,11 @@
     "Teklif masada... Ama bu koyun başına ne geleceğini bilmiyor."
    ],
    "ses": "en-US-BrianMultilingualNeural",
-   "url": "https://archive.org/download/CosmosLaundromatFirstCycle/Cosmos%20Laundromat%20-%20First%20Cycle%20(1080p).mp4"
+   "url": "https://archive.org/download/CosmosLaundromatFirstCycle/Cosmos%20Laundromat%20-%20First%20Cycle%20(1080p).mp4",
+   "tur": "Fantastik / Dram",
+   "puan": 8,
+   "ozet": "Hayatından bıkmış bir koyun, gizemli bir satıcıdan reddedilemeyecek bir teklif alır: her şeyi değiştirebileceği sonsuz bir hayat.",
+   "etiketler": "#fantastik #dram"
   },
   {
    "ad": "Agent 327",
@@ -106,7 +122,11 @@
     "Ajan köşeye sıkıştı... Bu onun son hamlesi olacak."
    ],
    "ses": "en-US-BrianMultilingualNeural",
-   "url": "https://archive.org/download/agent327operationbarbershop/agent327-1080.mp4"
+   "url": "https://archive.org/download/agent327operationbarbershop/agent327-1080.mp4",
+   "tur": "Aksiyon / Komedi",
+   "puan": 8,
+   "ozet": "Gizli ajan 327, sıradan görünen bir berber dükkanında tehlikeli bir suç örgütünün izini sürer.",
+   "etiketler": "#aksiyon #casus"
   },
   {
    "ad": "Charge",
@@ -124,7 +144,11 @@
     "Geçen bölümde kovalamaca başladı... Kaçış var mı?"
    ],
    "ses": "en-US-BrianMultilingualNeural",
-   "url": "https://archive.org/download/charge-blender-open-movie-1608p/Charge%20-%20Blender%20Open%20Movie%201608p.mp4"
+   "url": "https://archive.org/download/charge-blender-open-movie-1608p/Charge%20-%20Blender%20Open%20Movie%201608p.mp4",
+   "tur": "Bilim Kurgu / Aksiyon",
+   "puan": 8,
+   "ozet": "Enerjinin tükendiği bir gelecekte yaşlı bir adam, son enerji kaynağını korumak için acımasız bir robota karşı savaşır.",
+   "etiketler": "#bilimkurgu #aksiyon"
   },
   {
    "ad": "Big Buck Bunny",
@@ -145,7 +169,11 @@
     "Zorbalar bir kez daha saldırdı... Ama bu sefer tavşan bir plan yapıyor."
    ],
    "ses": "en-US-BrianMultilingualNeural",
-   "url": "https://archive.org/download/BigBuckBunnyFULLHD60FPS/Big%20Buck%20Bunny%20-%20FULL%20HD%2060FPS.mp4"
+   "url": "https://archive.org/download/BigBuckBunnyFULLHD60FPS/Big%20Buck%20Bunny%20-%20FULL%20HD%2060FPS.mp4",
+   "tur": "Komedi / Animasyon",
+   "puan": 8,
+   "ozet": "Ormanın en masum tavşanı, üç zorba kemirgenin hedefi olur. Ama sabrının bir sınırı vardır.",
+   "etiketler": "#komedi #tavşan"
   },
   {
    "ad": "Spring",
@@ -167,7 +195,11 @@
     "Dağın ruhu karşısında... Elinde sadece küçük bir ateş var."
    ],
    "ses": "tr-TR-EmelNeural",
-   "url": "https://archive.org/download/springopenmovie/springopenmovie.mp4"
+   "url": "https://archive.org/download/springopenmovie/springopenmovie.mp4",
+   "tur": "Fantastik / Macera",
+   "puan": 9,
+   "ozet": "Bir çoban kız ve sadık köpeği, dağın uyanan eski ruhlarıyla yüzleşmek zorundadır.",
+   "etiketler": "#fantastik #macera"
   },
   {
    "ad": "Hero",
@@ -185,7 +217,11 @@
     "Geçen bölümde macera başladı... Şimdi büyük savaş vakti."
    ],
    "ses": "en-US-BrianMultilingualNeural",
-   "url": "https://archive.org/download/hero_20260106/hero.mp4"
+   "url": "https://archive.org/download/hero_20260106/hero.mp4",
+   "tur": "Macera / Aksiyon",
+   "puan": 7,
+   "ozet": "Sıradan bir gün, bir kahramanın doğuşuna ve büyük bir savaşa sahne olur.",
+   "etiketler": "#macera #kahraman"
   },
   {
    "ad": "Elephants Dream",
@@ -203,7 +239,11 @@
     "Geçen bölümde Proog ona yolu gösterdi... Ama bu yol nereye çıkıyor?"
    ],
    "altyazi": "subs/ed_tr.srt",
-   "url": "https://archive.org/download/elephants-dream_202604/Elephants%20Dream.mp4"
+   "url": "https://archive.org/download/elephants-dream_202604/Elephants%20Dream.mp4",
+   "tur": "Bilim Kurgu / Gerilim",
+   "puan": 7,
+   "ozet": "İki adam sonu olmayan dev bir makinenin içinde yol alır. Yaşlı Proog her şeyin güvenli olduğunu söyler, genç Emo ise ona inanmaz.",
+   "etiketler": "#bilimkurgu #gerilim"
   }
  ],
  "pazar": [
@@ -216,7 +256,10 @@
    "bas": 0,
    "bit": 160,
    "kanca": "Bir fincan kahve her şeyi değiştirdi",
-   "url": "https://archive.org/download/coffee-run/Coffee%20Run.mp4"
+   "url": "https://archive.org/download/coffee-run/Coffee%20Run.mp4",
+   "tur": "Komedi",
+   "puan": 8,
+   "etiketler": "#komedi"
   },
   {
    "ad": "Caminandes: Llamigos",
@@ -227,7 +270,10 @@
    "bas": 0,
    "bit": 130,
    "kanca": "Aç bir lama ve inatçı bir penguen",
-   "url": "https://archive.org/download/CaminandesLlamigos/Caminandes_%20Llamigos-1080p.mp4"
+   "url": "https://archive.org/download/CaminandesLlamigos/Caminandes_%20Llamigos-1080p.mp4",
+   "tur": "Komedi",
+   "puan": 8,
+   "etiketler": "#komedi #lama"
   },
   {
    "ad": "Wing It!",
@@ -238,7 +284,10 @@
    "bas": 0,
    "bit": 178,
    "kanca": "Bu roket uçacak mı?",
-   "url": "https://archive.org/download/wing-it/Wing%20It.mp4"
+   "url": "https://archive.org/download/wing-it/Wing%20It.mp4",
+   "tur": "Komedi / Macera",
+   "puan": 8,
+   "etiketler": "#komedi #roket"
   },
   {
    "ad": "Caminandes: Llama Drama",
@@ -249,7 +298,10 @@
    "bas": 0,
    "bit": 90,
    "kanca": "Yolun karşısına geçmek isteyen inatçı bir lama",
-   "url": "https://archive.org/download/Caminandes1LlamaDrama/01_llama_drama_1080p.mp4"
+   "url": "https://archive.org/download/Caminandes1LlamaDrama/01_llama_drama_1080p.mp4",
+   "tur": "Komedi",
+   "puan": 8,
+   "etiketler": "#komedi #lama"
   },
   {
    "ad": "Caminandes: Gran Dillama",
@@ -260,7 +312,10 @@
    "bas": 0,
    "bit": 146,
    "kanca": "Çitin öbür tarafındaki ot daha yeşil...",
-   "url": "https://archive.org/download/Caminandes2GranDillama/02_gran_dillama_1080p.mp4"
+   "url": "https://archive.org/download/Caminandes2GranDillama/02_gran_dillama_1080p.mp4",
+   "tur": "Komedi",
+   "puan": 8,
+   "etiketler": "#komedi #lama"
   }
  ]
 }

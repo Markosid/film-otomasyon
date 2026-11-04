@@ -46,15 +46,43 @@ def boyut(metin, en_fazla, genislik=1000):
     return int(min(en_fazla, genislik / (0.63 * max(len(metin), 1))))
 
 
-def render(girdi, cikti, bas, bit, baslik, kanca, kredi, son_yazi="", fade=True, altyazi=None):
-    vf = ("[0:v]split[a][b];"
-          "[a]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=30:5,eq=brightness=-0.2[bg];"
-          "[b]crop='min(iw,ih*1.45)':ih,scale=1080:-2[fg];"
-          "[bg][fg]overlay=(W-w)/2:(H-h)/2,"
-          f"drawtext=fontfile={FONT}:text='{yazi(baslik)}':fontsize={boyut(baslik, 70)}:fontcolor=white:borderw=4:bordercolor=black:x=(w-tw)/2:y=300,"
-          f"drawtext=fontfile={FONT}:text='{yazi(kanca)}':fontsize={boyut(kanca, 56)}:fontcolor=yellow:borderw=4:bordercolor=black:x=(w-tw)/2:y=h-480"
-          + (f":enable='lt(t,{bit-bas-3:.2f})'" if son_yazi else "") + ","
-          f"drawtext=fontfile={FONT}:text='{yazi(kredi)}':fontsize=30:fontcolor=white@0.8:borderw=2:bordercolor=black:x=(w-tw)/2:y=h-200")
+HESAP = "@eskisinema.arsivi"
+MOR = "0xB57BFF"
+SORULAR_DEVAM = ["Sence sonra ne olacak?", "Sen olsan ne yapardın?", "Bu sahnede kimin tarafındasın?"]
+SORULAR_SON = ["İzlediyseniz tek kelimeyle anlatın", "Bu filme 10 üzerinden kaç verirsin?", "Buna benzer bir film önerin"]
+
+
+def satirlar(metin, en_fazla=24):
+    """Metni kelime bölmeden en fazla 2-3 satıra ayırır."""
+    out, cur = [], ""
+    for k in metin.split():
+        if cur and len(cur) + 1 + len(k) > en_fazla:
+            out.append(cur); cur = k
+        else:
+            cur = f"{cur} {k}".strip()
+    return out + ([cur] if cur else [])
+
+
+def render(girdi, cikti, bas, bit, baslik, kanca, kredi, son_yazi="", fade=True, altyazi=None, soru=None):
+    """Siyah zemin; üstte mor çizgili kanca, ortada film, altta etkileşim sorusu + takip çağrısı."""
+    if soru is None:
+        liste = SORULAR_SON if fade else SORULAR_DEVAM
+        soru = liste[sum(map(ord, baslik)) % len(liste)]
+    VY = 560  # videonun üst kenarı
+    sat = satirlar(kanca, 22) if kanca else []
+    fs = min(68, boyut(max(sat, key=len) if sat else "", 68, 900))
+    ust = VY - 70 - len(sat) * int(fs * 1.25)
+    vf = ("[0:v]crop='min(iw,ih*1.45)':ih,scale=1080:-2,pad=1080:1920:0:" + str(VY) + ":black,"
+          f"drawtext=fontfile={FONT}:text='{yazi(baslik)}':fontsize={boyut(baslik, 40)}:fontcolor={MOR}:x=100:y={ust - 70}")
+    if sat:
+        vf += f",drawbox=x=66:y={ust - 6}:w=10:h={len(sat) * int(fs * 1.25) - 4}:color={MOR}:t=fill"
+        for n, m in enumerate(sat):
+            vf += f",drawtext=fontfile={FONT}:text='{yazi(m)}':fontsize={fs}:fontcolor=white:x=100:y={ust + n * int(fs * 1.25)}"
+    vf += (f",drawtext=fontfile={FONT}:text='{yazi(HESAP)}':fontsize=30:fontcolor=white@0.45:x=24:y={VY + 24}"
+           f",drawtext=fontfile={FONT}:text='{yazi(soru)} ↓':fontsize={boyut(soru + ' ↓', 50, 920)}:fontcolor=white:x=80:y=1430"
+           f",drawtext=fontfile={FONT}:text='Her gün yeni part için':fontsize=40:fontcolor={MOR}:x=80:y=1520"
+           f",drawtext=fontfile={FONT}:text='takip et → {yazi(HESAP)}':fontsize=40:fontcolor={MOR}:x=80:y=1572"
+           f",drawtext=fontfile={FONT}:text='{yazi(kredi)}':fontsize=26:fontcolor=white@0.6:x=(w-tw)/2:y=h-150")
     if son_yazi:  # son 3 saniyede büyük "devamı" yazısı
         vf += (f",drawtext=fontfile={FONT}:text='{yazi(son_yazi)}':fontsize={boyut(son_yazi, 88, 960)}:fontcolor=white:box=1:boxcolor=red@0.85:"
                f"boxborderw=24:x=(w-tw)/2:y=(h-th)/2+520:enable='gte(t,{bit-bas-3:.2f})'")
@@ -62,7 +90,7 @@ def render(girdi, cikti, bas, bit, baslik, kanca, kredi, son_yazi="", fade=True,
         from parts import srt_kaydir
         kayik = srt_kaydir(altyazi, bas, str(cikti) + ".srt")
         vf += (f",subtitles='{kayik}':force_style='Fontname=DejaVu Sans,Bold=1,Fontsize=9,"
-               "Outline=2,Shadow=0,MarginV=95,Alignment=2'")
+               "Outline=2,Shadow=0,MarginV=104,Alignment=2'")
     vf += "[v]"
     subprocess.run(["ffmpeg", "-y", "-v", "error", "-ss", f"{bas:.3f}", "-to", f"{bit:.3f}", "-i", girdi,
                     "-filter_complex", vf, "-map", "[v]", "-map", "0:a?",
