@@ -1,13 +1,14 @@
 """Haftalık "Part 1 / Part 2" dizisi üretir.
 
-Takvim:  Pzt, Sal, Çar -> her gün 3 YENİ filmin Part 1'i
-         Per, Cum, Cmt -> sırasıyla Pzt, Sal, Çar filmlerinin Part 2'si
-         Paz           -> boş (istenirse en çok izlenenin tekrarı)
+Takvim (hafta Perşembe başlar):
+         Per, Cum, Cmt -> her gün 3 YENİ filmin Part 1'i
+         Paz           -> Pazar Özel (kısa filmin tamamı)
+         Pzt, Sal, Çar -> sırasıyla Per, Cum, Cmt filmlerinin Part 2'si
 Her part 40-80 sn; kesim noktası, sahne geçişlerinden "en heyecanlı" olana konur
 (kesimden hemen önce ve sonra ses yüksek, kesmeler sık) ki izleyen "ne oluyor?" desin.
 
 Kullanım:
-    python seri.py --kutuphane filmler.json --hafta-basi 2026-11-09 --cikti hafta1/ [--sadece-gun 0]
+    python seri.py --kutuphane filmler.json --hafta-basi 2026-11-12 --cikti hafta1/ [--sadece-gun 0]
 """
 import argparse, datetime as dt, json, sys
 from pathlib import Path
@@ -55,13 +56,17 @@ def takvim(filmler, hafta_basi):
     for g in range(3):
         for f in filmler[g * 3:(g + 1) * 3]:
             plan.append((t0 + dt.timedelta(days=g), f, 1))
-            plan.append((t0 + dt.timedelta(days=g + 3), f, 2))
+            plan.append((t0 + dt.timedelta(days=g + 4), f, 2))
     return sorted(plan, key=lambda x: (x[0], filmler.index(x[1])))
 
 
-def aciklama(f, no, toplam):
+def gun_adi(t0, ek):
+    return GUNLER[(dt.date.fromisoformat(t0) + dt.timedelta(days=ek)).weekday()]
+
+
+def aciklama(f, no, toplam, t0):
     kanca = f["kancalar"][no - 1]
-    devam = f"Part {no + 1} {GUNLER[(f['_gun'] + 3) % 7]} günü profilde 👉 Takipte kal!" if no < toplam \
+    devam = f"Part {no + 1} {gun_adi(t0, f['_gun'] + 4)} günü profilde 👉 Takipte kal!" if no < toplam \
         else "Sence sonu nasıl? Yorumlara yaz 👇"
     return (f"{kanca}\n\n{devam}\n\n🎬 \"{f['ad']}\" ({f['yil']}) © Blender Foundation | studio.blender.org\n"
             f"Lisans: CC BY {f['lisans']}\n\n#animasyon #kısafilm #{f['etiket']} #part{no} #devamıgelecek "
@@ -71,10 +76,10 @@ def aciklama(f, no, toplam):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--kutuphane", required=True)
-    p.add_argument("--hafta-basi", required=True, help="pazartesi tarihi, YYYY-AA-GG")
+    p.add_argument("--hafta-basi", required=True, help="perşembe tarihi, YYYY-AA-GG")
     p.add_argument("--hafta", type=int, default=1, help="kaçıncı hafta (kütüphanedeki 9'lu grup)")
     p.add_argument("--cikti", required=True)
-    p.add_argument("--sadece-gun", type=int, help="yalnızca bu günü render et (0=Pzt, 6=Paz)")
+    p.add_argument("--sadece-gun", type=int, help="yalnızca bu günü render et (hafta başından gün farkı, 0=Per, 3=Paz)")
     p.add_argument("--ses", help="anlatıcı sesi (boşsa anlatıcı eklenmez)")
     p.add_argument("--sadece-plan", action="store_true", help="kesim noktalarını bul, render etme")
     a = p.parse_args()
@@ -105,24 +110,24 @@ def main():
         gun = (tarih - dt.date.fromisoformat(a.hafta_basi)).days
         dosya = out / f"{tarih}_{f['etiket']}_part{no}.mp4"
         son = len(f["_partlar"])
-        kayit.append({"tarih": str(tarih), "gun": GUNLER[gun], "film": f["ad"], "part": no,
+        kayit.append({"tarih": str(tarih), "gun": GUNLER[tarih.weekday()], "film": f["ad"], "part": no,
                       "bas": bas, "bit": bit, "dosya": dosya.name,
-                      "aciklama": aciklama(f, no, son), "paylasildi": False})
+                      "aciklama": aciklama(f, no, son, a.hafta_basi), "paylasildi": False})
         if a.sadece_gun is not None and gun != a.sadece_gun:
             continue
         hedef = str(dosya).replace(".mp4", "_ham.mp4")  # anlatıcısız hali saklanır, ses değişirse yeniden kullanılır
         render(f["dosya"], hedef, bas, bit, f"{f['ad']} - Part {no}", f["kancalar"][no - 1],
                f"{f['ad']} · Blender Foundation · CC BY {f['lisans']}",
-               son_yazi=f"PART {no + 1} {buyuk(GUNLER[(gun + 3) % 7])}" if no < son else "", fade=no >= son,
+               son_yazi=f"PART {no + 1} {buyuk(gun_adi(a.hafta_basi, f['_gun'] + 4))}" if no < son else "", fade=no >= son,
                altyazi=f.get("altyazi"))
         if f.get("anlatim") and a.ses:
             anlatici.ekle(hedef, f["anlatim"][no - 1], str(dosya), a.ses)
         else:
             import shutil; shutil.copy(hedef, dosya)
-        print(f"{tarih} {GUNLER[gun]}: {f['ad']} Part {no} ({bas}-{bit} sn) -> {dosya}")
+        print(f"{tarih} {GUNLER[tarih.weekday()]}: {f['ad']} Part {no} ({bas}-{bit} sn) -> {dosya}")
     # Pazar Özel: kısa filmin tamamı tek videoda
     for pz in kut.get("pazar", [])[a.hafta - 1:a.hafta]:
-        tarih = dt.date.fromisoformat(a.hafta_basi) + dt.timedelta(days=6)
+        tarih = dt.date.fromisoformat(a.hafta_basi) + dt.timedelta(days=3)
         dosya = out / f"{tarih}_{pz['etiket']}_pazar.mp4"
         kayit.append({"tarih": str(tarih), "gun": "Pazar", "film": pz["ad"], "part": 0, "bas": pz["bas"],
                       "bit": pz["bit"], "dosya": dosya.name, "paylasildi": False,
@@ -130,7 +135,7 @@ def main():
                                   f"hangisiydi? Yorumlara yaz 👇\n\n🎬 \"{pz['ad']}\" ({pz['yil']}) © Blender Foundation"
                                   f" | studio.blender.org\nLisans: CC BY {pz['lisans']}\n\n#pazarözel #animasyon "
                                   "#kısafilm #animation #shortfilm #reels"})
-        if a.sadece_gun in (None, 6):
+        if a.sadece_gun in (None, 3):
             render(pz["dosya"], str(dosya), pz["bas"], pz["bit"], f"PAZAR ÖZEL: {pz['ad']}", pz["kanca"],
                    f"{pz['ad']} · Blender Foundation · CC BY {pz['lisans']}")
             print(f"{tarih} Pazar: {pz['ad']} -> {dosya}")

@@ -8,7 +8,7 @@ from pathlib import Path
 KOK = Path(__file__).parent
 sys.path.insert(0, str(KOK))
 from highlight import render  # noqa: E402
-from seri import GUNLER, buyuk  # noqa: E402
+from seri import buyuk  # noqa: E402
 import anlatici  # noqa: E402
 
 
@@ -34,11 +34,11 @@ def uret(takvim, i, cikti):
         return hedef
     no = k["part"]
     son = max(x["part"] for x in takvim if x["etiket"] == k["etiket"])
-    gun = GUNLER.index(k["gun"])
+    sonraki = next((x["gun"] for x in takvim if x["etiket"] == k["etiket"] and x["part"] == no + 1), "")
     ham = out / k["dosya"].replace(".mp4", "_ham.mp4")
     altyazi = str(KOK / f["altyazi"]) if f.get("altyazi") else None
     render(film, str(ham), k["bas"], k["bit"], f"{f['ad']} - Part {no}", f["kancalar"][no - 1], kredi,
-           son_yazi=f"PART {no + 1} {buyuk(GUNLER[(gun + 3) % 7])}" if no < son else "", fade=no >= son,
+           son_yazi=f"PART {no + 1} {buyuk(sonraki)}" if no < son else "", fade=no >= son,
            altyazi=altyazi)
     if f.get("anlatim"):
         anlatici.ekle(str(ham), f["anlatim"][no - 1], str(hedef), f.get("ses", "en-US-BrianMultilingualNeural"))
