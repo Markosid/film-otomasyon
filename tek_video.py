@@ -29,7 +29,7 @@ def uret(takvim, i, cikti):
     hedef = out / k["dosya"]
     kredi = f"{f['ad']} · Blender Foundation · CC BY {f['lisans']}"
     if k["part"] == 0:  # Pazar özel
-        render(film, str(hedef), k["bas"], k["bit"], f"PAZAR ÖZEL: {f['ad']}", f["kanca"], kredi)
+        render(film, str(hedef), k["bas"], k["bit"], k.get("baslik") or f"PAZAR ÖZEL: {f['ad']}", f["kanca"], kredi)
         return hedef
     no = k["part"]
     son = max(x["part"] for x in takvim if x["etiket"] == k["etiket"])

@@ -9,11 +9,15 @@
    "jenerik": 730,
    "kancalar": [
     "Bu adam ondan ne istiyor?",
-    "Kavganın sonu..."
+    "Kavganın sonu...",
+    "Yaşlı adam onu kurtardı... ama neden?",
+    "Çatıda yaralı bir yavru ejderha!"
    ],
    "anlatim": [
     "Karlı dağda yalnız bir kız... Ama biri onu izliyor.",
-    "Geçen bölümde avcı ona saldırdı... Peki şimdi ne olacak?"
+    "Geçen bölümde avcı ona saldırdı... Peki şimdi ne olacak?",
+    "Geçen bölümde yaşlı bir adam onu kurtardı... Şimdi geçmişini öğreneceğiz.",
+    "Bir gün çatıda yaralı bir yavru ejderha buldu... Hayatı tamamen değişecekti."
    ],
    "altyazi": "subs/sintel_tr.srt",
    "ses": "tr-TR-EmelNeural",
@@ -27,11 +31,15 @@
    "dosya": "lib/spritefright.mp4",
    "kancalar": [
     "Ormana girdiler... ama yalnız değillerdi",
-    "Ve sonra bir şey kıpırdadı..."
+    "Ve sonra bir şey kıpırdadı...",
+    "Ormanın küçük sakinleri ortaya çıktı...",
+    "Gece çöktü... ve onlar geliyor"
    ],
    "anlatim": [
     "Bir grup genç ormana kamp yapmaya geldi... Ama orman onları istemiyordu.",
-    "Geçen bölümde ormanı kirlettiler... Şimdi bedelini ödeyecekler."
+    "Geçen bölümde ormanı kirlettiler... Şimdi bedelini ödeyecekler.",
+    "Geçen bölümde orman canlandı... Şimdi o küçük yaratıklar ortaya çıkıyor.",
+    "Gece kamp ateşi yandı... Ama karanlıkta biri onları izliyordu."
    ],
    "altyazi": "subs/sf_tr.srt",
    "ses": "en-US-BrianMultilingualNeural",
@@ -45,11 +53,15 @@
    "dosya": "lib/tearsofsteel.mp4",
    "kancalar": [
     "Bir ayrılık dünyanın sonunu getirdi",
-    "Geçmişi değiştirebilirler mi?"
+    "Geçmişi değiştirebilirler mi?",
+    "Dev makineler şehre geliyor",
+    "Geçmişin anahtarı bu adamda"
    ],
    "anlatim": [
     "Kırk yıl önce bir ayrılık... dünyanın sonunu getirdi.",
-    "Robotlar dünyayı ele geçirdi... Tek umut geçmişi değiştirmek."
+    "Robotlar dünyayı ele geçirdi... Tek umut geçmişi değiştirmek.",
+    "Geçen bölümde plan hazırlandı... Şimdi robotlar şehre geliyor.",
+    "Her şeyi başlatan adam... Tek umut onun hafızasında."
    ],
    "altyazi": "subs/TOS-tr.srt",
    "ses": "en-US-BrianMultilingualNeural",
@@ -63,11 +75,15 @@
    "dosya": "lib/cosmoslaundromat.mp4",
    "kancalar": [
     "Hayattan bıkmış bir koyun...",
-    "Bu teklifi kabul etmemeliydi..."
+    "Bu teklifi kabul etmemeliydi...",
+    "Gizemli adam bir teklif yapıyor",
+    "Koyunun gözleri her şeyi anlattı"
    ],
    "anlatim": [
     "Bu koyun hayatından bıkmıştı... Ta ki o yabancı gelene kadar.",
-    "Geçen bölümde garip bir teklif aldı... Kabul edecek mi?"
+    "Geçen bölümde garip bir teklif aldı... Kabul edecek mi?",
+    "Geçen bölümde o yabancı ortaya çıktı... Şimdi koyuna inanılmaz bir teklif yapacak.",
+    "Teklif masada... Ama bu koyun başına ne geleceğini bilmiyor."
    ],
    "ses": "en-US-BrianMultilingualNeural",
    "url": "https://archive.org/download/CosmosLaundromatFirstCycle/Cosmos%20Laundromat%20-%20First%20Cycle%20(1080p).mp4"
@@ -81,11 +97,13 @@
    "jenerik": 205,
    "kancalar": [
     "Sıradan bir berber dükkanı... değil!",
-    "Kavga başladı!"
+    "Kavga başladı!",
+    "Son hamle!"
    ],
    "anlatim": [
     "Sıradan bir berber dükkanı gibi görünüyor... Ama hiç de öyle değil.",
-    "Ajan tuzağa düştü... Buradan nasıl kurtulacak?"
+    "Ajan tuzağa düştü... Buradan nasıl kurtulacak?",
+    "Ajan köşeye sıkıştı... Bu onun son hamlesi olacak."
    ],
    "ses": "en-US-BrianMultilingualNeural",
    "url": "https://archive.org/download/agent327operationbarbershop/agent327-1080.mp4"
@@ -116,11 +134,15 @@
    "dosya": "lib/bigbuckbunny.mp4",
    "kancalar": [
     "Masum bir tavşan... ve üç zorba",
-    "İntikam vakti!"
+    "İntikam vakti!",
+    "Zorbalar tavşanı kızdırıyor",
+    "Sabrın sonu geldi..."
    ],
    "anlatim": [
     "Ormanın en masum tavşanı... Ama üç zorba onu kızdırmak üzere.",
-    "Zorbalar çok ileri gitti... Şimdi intikam vakti!"
+    "Zorbalar çok ileri gitti... Şimdi intikam vakti!",
+    "Geçen bölümde zorbalar sınırı aştı... Tavşan artık sabrının sonunda.",
+    "Zorbalar bir kez daha saldırdı... Ama bu sefer tavşan bir plan yapıyor."
    ],
    "ses": "en-US-BrianMultilingualNeural",
    "url": "https://archive.org/download/BigBuckBunnyFULLHD60FPS/Big%20Buck%20Bunny%20-%20FULL%20HD%2060FPS.mp4"
@@ -134,11 +156,15 @@
    "jenerik": 410,
    "kancalar": [
     "Bu dağın ruhları uyanıyor...",
-    "Köpeğini kaybetmek üzere..."
+    "Köpeğini kaybetmek üzere...",
+    "Ormanın derinliklerinde dev bir ruh",
+    "Elindeki ateş her şeyi değiştirecek"
    ],
    "anlatim": [
     "Bir kız ve sadık köpeği... Dağın ruhları uyanmak üzere.",
-    "Geçen bölümde ruhlar ortaya çıktı... Köpeğini kurtarabilecek mi?"
+    "Geçen bölümde ruhlar ortaya çıktı... Köpeğini kurtarabilecek mi?",
+    "Geçen bölümde köpeğini kaybetti... Şimdi karanlık ormana tek başına giriyor.",
+    "Dağın ruhu karşısında... Elinde sadece küçük bir ateş var."
    ],
    "ses": "tr-TR-EmelNeural",
    "url": "https://archive.org/download/springopenmovie/springopenmovie.mp4"
@@ -160,6 +186,24 @@
    ],
    "ses": "en-US-BrianMultilingualNeural",
    "url": "https://archive.org/download/hero_20260106/hero.mp4"
+  },
+  {
+   "ad": "Elephants Dream",
+   "yil": 2006,
+   "etiket": "elephantsdream",
+   "lisans": "2.5",
+   "dosya": "lib/elephantsdream.mp4",
+   "jenerik": 560,
+   "kancalar": [
+    "Bu makine dünyasından çıkış var mı?",
+    "Yaşlı adam bir şey saklıyor..."
+   ],
+   "anlatim": [
+    "İki adam, sonu olmayan dev bir makinenin içinde kaybolmuş... Biri rehber, biri şüpheci.",
+    "Geçen bölümde Proog ona yolu gösterdi... Ama bu yol nereye çıkıyor?"
+   ],
+   "altyazi": "subs/ed_tr.srt",
+   "url": "https://archive.org/download/elephants-dream_202604/Elephants%20Dream.mp4"
   }
  ],
  "pazar": [
@@ -195,6 +239,28 @@
    "bit": 178,
    "kanca": "Bu roket uçacak mı?",
    "url": "https://archive.org/download/wing-it/Wing%20It.mp4"
+  },
+  {
+   "ad": "Caminandes: Llama Drama",
+   "yil": 2013,
+   "etiket": "caminandes1",
+   "lisans": "3.0",
+   "dosya": "lib/caminandes1.mp4",
+   "bas": 0,
+   "bit": 90,
+   "kanca": "Yolun karşısına geçmek isteyen inatçı bir lama",
+   "url": "https://archive.org/download/Caminandes1LlamaDrama/01_llama_drama_1080p.mp4"
+  },
+  {
+   "ad": "Caminandes: Gran Dillama",
+   "yil": 2013,
+   "etiket": "caminandes2",
+   "lisans": "3.0",
+   "dosya": "lib/caminandes2.mp4",
+   "bas": 0,
+   "bit": 146,
+   "kanca": "Çitin öbür tarafındaki ot daha yeşil...",
+   "url": "https://archive.org/download/Caminandes2GranDillama/02_gran_dillama_1080p.mp4"
   }
  ]
 }
