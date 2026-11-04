@@ -64,6 +64,30 @@ def paylas(video_url, aciklama):
     return istek(f"{KIMLIK}/media_publish", {"creation_id": kap}, "POST")["id"]
 
 
+def hikaye_uret(dosya):
+    """Reels videosunun ilk 15 sn'si + "YENİ PART PROFİLDE" bandı (hikâye için)."""
+    from highlight import FONT
+    hedef = dosya.with_name(dosya.stem + "_hikaye.mp4")
+    vf = (f"drawtext=fontfile={FONT}:text='YENİ PART PROFİLDE':fontsize=70:fontcolor=white:box=1:"
+          "boxcolor=red@0.85:boxborderw=24:x=(w-tw)/2:y=170")
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(dosya), "-t", "15", "-vf", vf,
+                    "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-c:a", "aac", "-b:a", "128k",
+                    "-movflags", "+faststart", str(hedef)], check=True)
+    return hedef
+
+
+def hikaye_paylas(video_url):
+    kap = istek(f"{KIMLIK}/media", {"media_type": "STORIES", "video_url": video_url}, "POST")["id"]
+    for _ in range(40):
+        durum = istek(kap, {"fields": "status_code,status"})
+        if durum.get("status_code") == "FINISHED":
+            return istek(f"{KIMLIK}/media_publish", {"creation_id": kap}, "POST")["id"]
+        if durum.get("status_code") == "ERROR":
+            sys.exit(f"Hikâye işlenemedi: {durum}")
+        time.sleep(10)
+    sys.exit("Hikâye zamanında işlenmedi")
+
+
 def yukle(dosya):
     """Videoyu GitHub'daki 'videolar' sürümüne yükler, herkese açık adresini döner."""
     repo = os.environ["GITHUB_REPOSITORY"]
@@ -85,6 +109,8 @@ def main():
     from tek_video import uret
     dosya = uret(takvim, i, "cikti")
     print("Üretildi:", dosya, flush=True)
+    hikaye = hikaye_uret(dosya)
+    print("Hikâye üretildi:", hikaye, flush=True)
     if os.environ.get("DENEME"):
         if TOKEN:
             api_sec()  # token çalışıyor mu kontrol et
@@ -96,7 +122,13 @@ def main():
     k["medya_id"] = medya
     k["paylasim_zamani"] = dt.datetime.now(TR).isoformat(timespec="minutes")
     takvim_yolu.write_text(json.dumps(takvim, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"Paylaşıldı: {k['film']} Part {k['part']} -> {medya}")
+    print(f"Paylaşıldı: {k['film']} Part {k['part']} -> {medya}", flush=True)
+    try:  # hikâye başarısız olsa da Reels paylaşımı geçerli kalır
+        k["hikaye_id"] = hikaye_paylas(yukle(hikaye))
+        takvim_yolu.write_text(json.dumps(takvim, ensure_ascii=False, indent=2), encoding="utf-8")
+        print("Hikâye paylaşıldı:", k["hikaye_id"])
+    except (SystemExit, Exception) as e:
+        print("Hikâye paylaşılamadı:", e)
 
 
 if __name__ == "__main__":
