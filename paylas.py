@@ -12,8 +12,27 @@ import datetime as dt, json, os, subprocess, sys, time, urllib.parse, urllib.req
 from pathlib import Path
 
 API = "https://graph.instagram.com/v21.0"
+KIMLIK = "me"
+IG_USER_ID = os.environ.get("IG_USER_ID", "17841416898516422")  # eskisinema.arsivi
 TOKEN = os.environ.get("IG_TOKEN", "")
 TR = dt.timezone(dt.timedelta(hours=3))
+
+
+def api_sec():
+    """Token Instagram girişinden mi, Facebook (sistem kullanıcısı) girişinden mi? İkisini de dener."""
+    global API, KIMLIK
+    for taban, kimlik in (("https://graph.instagram.com/v21.0", "me"),
+                          ("https://graph.facebook.com/v21.0", IG_USER_ID)):
+        url = f"{taban}/{kimlik}?" + urllib.parse.urlencode({"fields": "id,username", "access_token": TOKEN})
+        try:
+            with urllib.request.urlopen(url, timeout=30) as r:
+                bilgi = json.load(r)
+            API, KIMLIK = taban, bilgi.get("id", kimlik)
+            print(f"Instagram hesabı: {bilgi.get('username')} ({taban})", flush=True)
+            return
+        except urllib.error.HTTPError:
+            continue
+    sys.exit("Token geçersiz: Instagram'a bağlanılamadı (IG_TOKEN'ı kontrol et).")
 
 
 def istek(yol, veri=None, yontem="GET"):
@@ -31,7 +50,7 @@ def istek(yol, veri=None, yontem="GET"):
 
 
 def paylas(video_url, aciklama):
-    kap = istek("me/media", {"media_type": "REELS", "video_url": video_url, "caption": aciklama,
+    kap = istek(f"{KIMLIK}/media", {"media_type": "REELS", "video_url": video_url, "caption": aciklama,
                              "share_to_feed": "true"}, "POST")["id"]
     for _ in range(60):  # Instagram videoyu işlerken bekle (en fazla ~10 dk)
         durum = istek(kap, {"fields": "status_code,status"})
@@ -42,7 +61,7 @@ def paylas(video_url, aciklama):
         time.sleep(10)
     else:
         sys.exit("Video zamanında işlenmedi")
-    return istek("me/media_publish", {"creation_id": kap}, "POST")["id"]
+    return istek(f"{KIMLIK}/media_publish", {"creation_id": kap}, "POST")["id"]
 
 
 def yukle(dosya):
@@ -67,7 +86,10 @@ def main():
     dosya = uret(takvim, i, "cikti")
     print("Üretildi:", dosya, flush=True)
     if os.environ.get("DENEME"):
+        if TOKEN:
+            api_sec()  # token çalışıyor mu kontrol et
         print("DENEME modu: yüklenmedi ve paylaşılmadı."); return
+    api_sec()
     url = yukle(dosya)
     medya = paylas(url, k["aciklama"])
     k["paylasildi"] = True
