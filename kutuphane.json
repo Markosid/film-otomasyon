@@ -1,0 +1,200 @@
+{
+ "filmler": [
+  {
+   "ad": "Sintel",
+   "yil": 2010,
+   "etiket": "sintel",
+   "lisans": "3.0",
+   "dosya": "lib/sintel.mp4",
+   "jenerik": 730,
+   "kancalar": [
+    "Bu adam ondan ne istiyor?",
+    "Kavganın sonu..."
+   ],
+   "anlatim": [
+    "Karlı dağda yalnız bir kız... Ama biri onu izliyor.",
+    "Geçen bölümde avcı ona saldırdı... Peki şimdi ne olacak?"
+   ],
+   "altyazi": "subs/sintel_tr.srt",
+   "ses": "tr-TR-EmelNeural",
+   "url": "https://archive.org/download/Sintel/sintel-2048-stereo.mp4"
+  },
+  {
+   "ad": "Sprite Fright",
+   "yil": 2021,
+   "etiket": "spritefright",
+   "lisans": "4.0",
+   "dosya": "lib/spritefright.mp4",
+   "kancalar": [
+    "Ormana girdiler... ama yalnız değillerdi",
+    "Ve sonra bir şey kıpırdadı..."
+   ],
+   "anlatim": [
+    "Bir grup genç ormana kamp yapmaya geldi... Ama orman onları istemiyordu.",
+    "Geçen bölümde ormanı kirlettiler... Şimdi bedelini ödeyecekler."
+   ],
+   "altyazi": "subs/sf_tr.srt",
+   "ses": "en-US-BrianMultilingualNeural",
+   "url": "https://archive.org/download/sprite-fright/Sprite%20Fright%20-%20Open%20Movie%20by%20Blender%20Studio-804p.mp4"
+  },
+  {
+   "ad": "Tears of Steel",
+   "yil": 2012,
+   "etiket": "tearsofsteel",
+   "lisans": "3.0",
+   "dosya": "lib/tearsofsteel.mp4",
+   "kancalar": [
+    "Bir ayrılık dünyanın sonunu getirdi",
+    "Geçmişi değiştirebilirler mi?"
+   ],
+   "anlatim": [
+    "Kırk yıl önce bir ayrılık... dünyanın sonunu getirdi.",
+    "Robotlar dünyayı ele geçirdi... Tek umut geçmişi değiştirmek."
+   ],
+   "altyazi": "subs/TOS-tr.srt",
+   "ses": "en-US-BrianMultilingualNeural",
+   "url": "https://archive.org/download/Tears-of-Steel/tears_of_steel_720p.mov"
+  },
+  {
+   "ad": "Cosmos Laundromat",
+   "yil": 2015,
+   "etiket": "cosmoslaundromat",
+   "lisans": "4.0",
+   "dosya": "lib/cosmoslaundromat.mp4",
+   "kancalar": [
+    "Hayattan bıkmış bir koyun...",
+    "Bu teklifi kabul etmemeliydi..."
+   ],
+   "anlatim": [
+    "Bu koyun hayatından bıkmıştı... Ta ki o yabancı gelene kadar.",
+    "Geçen bölümde garip bir teklif aldı... Kabul edecek mi?"
+   ],
+   "ses": "en-US-BrianMultilingualNeural",
+   "url": "https://archive.org/download/CosmosLaundromatFirstCycle/Cosmos%20Laundromat%20-%20First%20Cycle%20(1080p).mp4"
+  },
+  {
+   "ad": "Agent 327",
+   "yil": 2017,
+   "etiket": "agent327",
+   "lisans": "4.0",
+   "dosya": "lib/agent327.mp4",
+   "jenerik": 205,
+   "kancalar": [
+    "Sıradan bir berber dükkanı... değil!",
+    "Kavga başladı!"
+   ],
+   "anlatim": [
+    "Sıradan bir berber dükkanı gibi görünüyor... Ama hiç de öyle değil.",
+    "Ajan tuzağa düştü... Buradan nasıl kurtulacak?"
+   ],
+   "ses": "en-US-BrianMultilingualNeural",
+   "url": "https://archive.org/download/agent327operationbarbershop/agent327-1080.mp4"
+  },
+  {
+   "ad": "Charge",
+   "yil": 2022,
+   "etiket": "charge",
+   "lisans": "4.0",
+   "dosya": "lib/charge.mp4",
+   "jenerik": 235,
+   "kancalar": [
+    "Son enerji için ölümüne kovalamaca",
+    "Kaçış yok..."
+   ],
+   "anlatim": [
+    "Dünyada son enerji kaynağı kaldı... Ve onu isteyen bir avcı var.",
+    "Geçen bölümde kovalamaca başladı... Kaçış var mı?"
+   ],
+   "ses": "en-US-BrianMultilingualNeural",
+   "url": "https://archive.org/download/charge-blender-open-movie-1608p/Charge%20-%20Blender%20Open%20Movie%201608p.mp4"
+  },
+  {
+   "ad": "Big Buck Bunny",
+   "yil": 2008,
+   "etiket": "bigbuckbunny",
+   "lisans": "3.0",
+   "dosya": "lib/bigbuckbunny.mp4",
+   "kancalar": [
+    "Masum bir tavşan... ve üç zorba",
+    "İntikam vakti!"
+   ],
+   "anlatim": [
+    "Ormanın en masum tavşanı... Ama üç zorba onu kızdırmak üzere.",
+    "Zorbalar çok ileri gitti... Şimdi intikam vakti!"
+   ],
+   "ses": "en-US-BrianMultilingualNeural",
+   "url": "https://archive.org/download/BigBuckBunnyFULLHD60FPS/Big%20Buck%20Bunny%20-%20FULL%20HD%2060FPS.mp4"
+  },
+  {
+   "ad": "Spring",
+   "yil": 2019,
+   "etiket": "spring",
+   "lisans": "4.0",
+   "dosya": "lib/spring.mp4",
+   "jenerik": 410,
+   "kancalar": [
+    "Bu dağın ruhları uyanıyor...",
+    "Köpeğini kaybetmek üzere..."
+   ],
+   "anlatim": [
+    "Bir kız ve sadık köpeği... Dağın ruhları uyanmak üzere.",
+    "Geçen bölümde ruhlar ortaya çıktı... Köpeğini kurtarabilecek mi?"
+   ],
+   "ses": "tr-TR-EmelNeural",
+   "url": "https://archive.org/download/springopenmovie/springopenmovie.mp4"
+  },
+  {
+   "ad": "Hero",
+   "yil": 2018,
+   "etiket": "hero",
+   "lisans": "4.0",
+   "dosya": "lib/hero.mp4",
+   "jenerik": 210,
+   "kancalar": [
+    "Bir kahraman doğuyor...",
+    "Ve büyük savaş başlıyor"
+   ],
+   "anlatim": [
+    "Sıradan bir gün... Bir kahramanın doğuşuna sahne olmak üzere.",
+    "Geçen bölümde macera başladı... Şimdi büyük savaş vakti."
+   ],
+   "ses": "en-US-BrianMultilingualNeural",
+   "url": "https://archive.org/download/hero_20260106/hero.mp4"
+  }
+ ],
+ "pazar": [
+  {
+   "ad": "Coffee Run",
+   "yil": 2020,
+   "etiket": "coffeerun",
+   "lisans": "4.0",
+   "dosya": "lib/coffeerun.mp4",
+   "bas": 0,
+   "bit": 160,
+   "kanca": "Bir fincan kahve her şeyi değiştirdi",
+   "url": "https://archive.org/download/coffee-run/Coffee%20Run.mp4"
+  },
+  {
+   "ad": "Caminandes: Llamigos",
+   "yil": 2016,
+   "etiket": "caminandes",
+   "lisans": "3.0",
+   "dosya": "lib/caminandes.mp4",
+   "bas": 0,
+   "bit": 130,
+   "kanca": "Aç bir lama ve inatçı bir penguen",
+   "url": "https://archive.org/download/CaminandesLlamigos/Caminandes_%20Llamigos-1080p.mp4"
+  },
+  {
+   "ad": "Wing It!",
+   "yil": 2023,
+   "etiket": "wingit",
+   "lisans": "4.0",
+   "dosya": "lib/wingit.mp4",
+   "bas": 0,
+   "bit": 178,
+   "kanca": "Bu roket uçacak mı?",
+   "url": "https://archive.org/download/wing-it/Wing%20It.mp4"
+  }
+ ]
+}

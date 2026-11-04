@@ -1,0 +1,54 @@
+name: Instagram paylaşımı
+on:
+  schedule:
+    - cron: "45 8 * * *"    # ~12:00 TR (üretim için 15 dk önce başlar)
+    - cron: "45 14 * * *"   # ~18:00 TR
+    - cron: "45 17 * * *"   # ~21:00 TR
+  workflow_dispatch:
+    inputs:
+      deneme:
+        description: "Deneme (video üret ama paylaşma)"
+        type: boolean
+        default: true
+      tarih:
+        description: "Hangi günün videosu (YYYY-AA-GG, boşsa bugün)"
+        required: false
+permissions:
+  contents: write
+concurrency: paylasim
+jobs:
+  paylas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Araçları kur
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+          pip install -q edge-tts
+      - name: Film önbelleği
+        uses: actions/cache@v4
+        with:
+          path: lib
+          key: filmler-${{ github.run_id }}
+          restore-keys: filmler-
+      - name: Videoyu üret ve paylaş
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          DENEME: ${{ inputs.deneme && '1' || '' }}
+          TARIH: ${{ inputs.tarih }}
+        run: python3 paylas.py takvim.json
+      - name: Deneme videosunu indirilebilir yap
+        if: ${{ inputs.deneme }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: deneme-video
+          path: cikti/*.mp4
+      - name: Takvimi güncelle
+        if: ${{ !inputs.deneme }}
+        run: |
+          git config user.name "paylasim-botu"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add takvim.json
+          git diff --cached --quiet || (git commit -m "Paylaşıldı: $(date -u +%F' '%H:%M)" && git push)
