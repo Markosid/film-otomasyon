@@ -49,10 +49,33 @@ def istek(yol, veri=None, yontem="GET"):
         sys.exit(f"Instagram hatası {e.code}: {e.read().decode()[:500]}")
 
 
-def paylas(video_url, aciklama, deneme=4):
+def kap_dogrudan(dosya, veri):
+    """Videoyu Instagram'a doğrudan (resumable) yükler; URL'den çekme sorunlarını aşar."""
+    cevap = istek(f"{KIMLIK}/media", dict(veri, upload_type="resumable"), "POST")
+    kap = cevap["id"]
+    uri = cevap.get("uri") or f"https://rupload.facebook.com/ig-api-upload/v21.0/{kap}"
+    icerik = Path(dosya).read_bytes()
+    req = urllib.request.Request(uri, data=icerik, method="POST", headers={
+        "Authorization": f"OAuth {TOKEN}", "offset": "0", "file_size": str(len(icerik))})
+    try:
+        with urllib.request.urlopen(req, timeout=300) as r:
+            print("Doğrudan yüklendi:", r.read().decode()[:200], flush=True)
+    except urllib.error.HTTPError as e:
+        sys.exit(f"Doğrudan yükleme hatası {e.code}: {e.read().decode()[:500]}")
+    return kap
+
+
+def paylas(video_url, aciklama, deneme=4, dosya=None):
     for n in range(1, deneme + 1):  # Instagram videoyu bazen çekemiyor (ör. 2207077); birkaç kez dene
-        kap = istek(f"{KIMLIK}/media", {"media_type": "REELS", "video_url": video_url, "caption": aciklama,
-                                 "share_to_feed": "true"}, "POST")["id"]
+        veri = {"media_type": "REELS", "caption": aciklama, "share_to_feed": "true"}
+        kap = None
+        if dosya and n % 2 == 1:  # tek denemelerde doğrudan yükle, çiftlerde URL'den
+            try:
+                kap = kap_dogrudan(dosya, veri)
+            except SystemExit as e:
+                print(f"Deneme {n}: {e}", flush=True)
+        if kap is None:
+            kap = istek(f"{KIMLIK}/media", dict(veri, video_url=video_url), "POST")["id"]
         for _ in range(60):  # Instagram videoyu işlerken bekle (en fazla ~10 dk)
             durum = istek(kap, {"fields": "status_code,status"})
             if durum.get("status_code") in ("FINISHED", "ERROR"):
@@ -118,7 +141,7 @@ def main():
         print("DENEME modu: yüklenmedi ve paylaşılmadı."); return
     api_sec()
     url = yukle(dosya)
-    medya = paylas(url, k["aciklama"])
+    medya = paylas(url, k["aciklama"], dosya=dosya)
     k["paylasildi"] = True
     k["medya_id"] = medya
     k["paylasim_zamani"] = dt.datetime.now(TR).isoformat(timespec="minutes")
