@@ -49,19 +49,20 @@ def istek(yol, veri=None, yontem="GET"):
         sys.exit(f"Instagram hatası {e.code}: {e.read().decode()[:500]}")
 
 
-def paylas(video_url, aciklama):
-    kap = istek(f"{KIMLIK}/media", {"media_type": "REELS", "video_url": video_url, "caption": aciklama,
-                             "share_to_feed": "true"}, "POST")["id"]
-    for _ in range(60):  # Instagram videoyu işlerken bekle (en fazla ~10 dk)
-        durum = istek(kap, {"fields": "status_code,status"})
+def paylas(video_url, aciklama, deneme=4):
+    for n in range(1, deneme + 1):  # Instagram videoyu bazen çekemiyor (ör. 2207077); birkaç kez dene
+        kap = istek(f"{KIMLIK}/media", {"media_type": "REELS", "video_url": video_url, "caption": aciklama,
+                                 "share_to_feed": "true"}, "POST")["id"]
+        for _ in range(60):  # Instagram videoyu işlerken bekle (en fazla ~10 dk)
+            durum = istek(kap, {"fields": "status_code,status"})
+            if durum.get("status_code") in ("FINISHED", "ERROR"):
+                break
+            time.sleep(10)
         if durum.get("status_code") == "FINISHED":
-            break
-        if durum.get("status_code") == "ERROR":
-            sys.exit(f"Video işlenemedi: {durum}")
-        time.sleep(10)
-    else:
-        sys.exit("Video zamanında işlenmedi")
-    return istek(f"{KIMLIK}/media_publish", {"creation_id": kap}, "POST")["id"]
+            return istek(f"{KIMLIK}/media_publish", {"creation_id": kap}, "POST")["id"]
+        print(f"Deneme {n}: video işlenemedi: {durum}", flush=True)
+        time.sleep(60)
+    sys.exit("Video Instagram tarafından işlenemedi")
 
 
 def hikaye_uret(dosya):
