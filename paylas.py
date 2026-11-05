@@ -69,7 +69,7 @@ def paylas(video_url, aciklama, deneme=4, dosya=None):
     for n in range(1, deneme + 1):  # Instagram videoyu bazen çekemiyor (ör. 2207077); birkaç kez dene
         veri = {"media_type": "REELS", "caption": aciklama, "share_to_feed": "true"}
         kap = None
-        if dosya and n % 2 == 1:  # tek denemelerde doğrudan yükle, çiftlerde URL'den
+        if dosya and n % 2 == 0:  # önce URL'den, olmazsa doğrudan yükle
             try:
                 kap = kap_dogrudan(dosya, veri)
             except SystemExit as e:
@@ -122,14 +122,39 @@ def yukle(dosya):
     return f"https://github.com/{repo}/releases/download/videolar/{urllib.parse.quote(dosya.name)}"
 
 
+SAATLER = [12, 18, 21]  # TR saatiyle günün 1., 2., 3. paylaşımı
+
+
+def siradaki(takvim):
+    """Şu an paylaşılması gereken video (yoksa None). Zamanlanmış çalışmalar gecikse/atlansa da yetişir."""
+    simdi = dt.datetime.now(TR)
+    elle = os.environ.get("TARIH")
+    bugun = elle or simdi.date().isoformat()
+    gun = [i for i, k in enumerate(takvim) if k["tarih"] == bugun]
+    bekleyen = [i for i in gun if not takvim[i]["paylasildi"]]
+    if not bekleyen:
+        return None
+    if not elle:
+        sabah = simdi.replace(hour=6, minute=0, second=0, microsecond=0).isoformat(timespec="minutes")
+        yapilan = sum(1 for i in gun if takvim[i]["paylasildi"] and takvim[i].get("paylasim_zamani", "") >= sabah)
+        if simdi.hour < SAATLER[min(yapilan, len(SAATLER) - 1)]:
+            return None
+    return bekleyen[0]
+
+
 def main():
     takvim_yolu = Path(sys.argv[1] if len(sys.argv) > 1 else "takvim.json")
     takvim = json.loads(takvim_yolu.read_text(encoding="utf-8"))
-    bugun = os.environ.get("TARIH") or dt.datetime.now(TR).date().isoformat()
-    sira = [i for i, k in enumerate(takvim) if k["tarih"] == bugun and not k["paylasildi"]]
-    if not sira:
-        print(f"{bugun}: paylaşılacak video yok."); return
-    i = sira[0]; k = takvim[i]
+    i = siradaki(takvim)
+    if "--kontrol" in sys.argv:  # Actions: paylaşım zamanı geldi mi?
+        print("Paylaşım zamanı:", "evet" if i is not None else "hayır")
+        if os.environ.get("GITHUB_OUTPUT"):
+            with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+                f.write(f"var={'1' if i is not None else ''}\n")
+        return
+    if i is None:
+        print("Şu an paylaşılacak video yok."); return
+    k = takvim[i]
     from tek_video import uret
     dosya = uret(takvim, i, "cikti")
     print("Üretildi:", dosya, flush=True)

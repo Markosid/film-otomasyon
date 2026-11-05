@@ -1,9 +1,7 @@
 name: Instagram paylaşımı
 on:
   schedule:
-    - cron: "45 8 * * *"    # ~12:00 TR (üretim için 15 dk önce başlar)
-    - cron: "45 14 * * *"   # ~18:00 TR
-    - cron: "45 17 * * *"   # ~21:00 TR
+    - cron: "7,37 9-20 * * *"  # her yarım saatte bakar; 12:00, 18:00, 21:00 TR sırası geldiyse paylaşır
   workflow_dispatch:
     inputs:
       deneme:
@@ -24,18 +22,26 @@ jobs:
       - uses: actions/checkout@v4
       - name: En güncel takvimi al  # sırada bekleyen çalışma eski takvimle aynı videoyu tekrar paylaşmasın
         run: git pull --ff-only origin main
+      - name: Paylaşım zamanı geldi mi?
+        id: k
+        env:
+          TARIH: ${{ inputs.tarih }}
+        run: python3 paylas.py takvim.json --kontrol
       - name: Araçları kur
+        if: steps.k.outputs.var == '1'
         timeout-minutes: 8
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
           pip install -q edge-tts
       - name: Film önbelleği
+        if: steps.k.outputs.var == '1'
         uses: actions/cache@v4
         with:
           path: lib
           key: filmler-${{ github.run_id }}
           restore-keys: filmler-
       - name: Videoyu üret ve paylaş
+        if: steps.k.outputs.var == '1'
         env:
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
           GH_TOKEN: ${{ github.token }}
@@ -43,13 +49,13 @@ jobs:
           TARIH: ${{ inputs.tarih }}
         run: python3 paylas.py takvim.json
       - name: Deneme videosunu indirilebilir yap
-        if: ${{ inputs.deneme }}
+        if: ${{ inputs.deneme && steps.k.outputs.var == '1' }}
         uses: actions/upload-artifact@v4
         with:
           name: deneme-video
           path: cikti/*.mp4
       - name: Takvimi güncelle
-        if: ${{ !inputs.deneme }}
+        if: ${{ !inputs.deneme && steps.k.outputs.var == '1' }}
         run: |
           git config user.name "paylasim-botu"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
