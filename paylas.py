@@ -30,7 +30,12 @@ def api_sec():
             API, KIMLIK = taban, bilgi.get("id", kimlik)
             print(f"Instagram hesabı: {bilgi.get('username')} ({taban})", flush=True)
             return
-        except urllib.error.HTTPError:
+        except urllib.error.HTTPError as e:
+            try:
+                hata = json.load(e).get("error", {})
+                print(f"{taban}: {hata.get('code')}/{hata.get('error_subcode')} {hata.get('message')}", flush=True)
+            except Exception:
+                print(f"{taban}: HTTP {e.code}", flush=True)
             continue
     sys.exit("Token geçersiz: Instagram'a bağlanılamadı (IG_TOKEN'ı kontrol et).")
 
