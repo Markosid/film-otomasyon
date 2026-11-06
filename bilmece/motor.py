@@ -67,8 +67,9 @@ def kisi(d, x, y, s=1.0, govde=(200, 90, 60), ten=(232, 190, 150), sac=(60, 40, 
     if kadin:
         d.ellipse([hx - k(20), hy - r - k(40), hx + k(20), hy - r + k(2)], fill=sac)  # topuz
     if kep:
-        d.chord([hx - r, hy - r - k(10), hx + r, hy + k(5)], 180, 360, fill=kep)
-        d.rectangle([hx + yon * k(10) - k(10), hy - k(12), hx + yon * k(80), hy - k(2)], fill=kep)
+        d.chord([hx - r - k(2), hy - r - k(18), hx + r + k(2), hy - k(18)], 180, 360, fill=kep, outline=CIZ, width=int(k(3)))
+        x1, x2 = sorted((hx + yon * k(15), hx + yon * k(88)))
+        d.rounded_rectangle([x1, hy - k(30), x2, hy - k(18)], int(k(5)), fill=lerp(kep, (0, 0, 0), 0.2), outline=CIZ, width=int(k(2)))
     if sakal:
         d.chord([hx - r + k(4), hy - k(10), hx + r - k(4), hy + r + k(6)], 0, 180, fill=sakal)
     if atki:
@@ -184,7 +185,7 @@ def alt_panel(d, buyuk, t, kayit, satirlar, no):
         if deger:
             d.text((W - 60, y), deger, font=MONO(42), fill=renk, anchor="ra")
         d.line([(60, y + 64), (W - 60, y + 64)], fill=(40, 40, 48), width=1)
-    d.text((60, H - 70), f"bilmece #{no} · temsilî çizim", font=MONO(26), fill=(90, 90, 100))
+    d.text((60, H - 70), f"bilmece #{no}", font=MONO(26), fill=(90, 90, 100))
     d.text((W - 60, H - 70), "@bilmece.sokagi", font=MONO(26), fill=(90, 90, 100), anchor="ra")
 
 
@@ -216,8 +217,8 @@ def uret(ad, SAHNE, cerceve, olay_fn, cikti, ses="tr-TR-AhmetNeural", ekler=None
     for i, sc in enumerate(SAHNE):
         f = f"{klasor}/{i}.mp3"
         if not os.path.exists(f):
-            subprocess.run(["python3", "ses.py", sc[1], f, ses, "-6Hz" if ses.startswith("tr") else "-0Hz", "-4%"], check=True)
-        sureler.append(sure_al(f) + (ekler or {}).get(sc[0], 0.6))
+            subprocess.run(["python3", "ses.py", sc[1], f, ses, "-6Hz" if ses.startswith("tr") else "-0Hz", os.environ.get("HIZ", "-4%")], check=True)
+        sureler.append(sure_al(f) + (ekler or {}).get(sc[0], float(os.environ.get("ARA", "0.6"))))
     bas = [sum(sureler[:i]) for i in range(len(sureler))]
     liste = []
     for i, s in enumerate(sureler):
