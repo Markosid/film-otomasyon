@@ -37,7 +37,7 @@ jobs:
         if: steps.k.outputs.var == '1'
         env:
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
-          IG_USER_ID: ""  # @bilmece.sokagi hesap kimliği; boşsa gerçek paylaşım yapılmaz
+          IG_USER_ID: "17841444957782939"  # @bilmece.sokagi
           GH_TOKEN: ${{ github.token }}
           DENEME: ${{ inputs.deneme && '1' || '' }}
           TARIH: ${{ inputs.tarih }}
