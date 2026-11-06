@@ -95,15 +95,23 @@ def paylas(video_url, aciklama, deneme=4, dosya=None):
 
 def hesaplari_listele():
     """Token'ın erişebildiği Instagram hesaplarını ve kimliklerini yazar (yeni hesap eklerken)."""
-    url = "https://graph.facebook.com/v21.0/me/accounts?" + urllib.parse.urlencode(
-        {"fields": "name,instagram_business_account{id,username}", "access_token": TOKEN})
-    try:
-        with urllib.request.urlopen(url, timeout=30) as r:
-            for s in json.load(r).get("data", []):
-                ig = s.get("instagram_business_account") or {}
-                print(f"Sayfa: {s.get('name')} -> Instagram: {ig.get('username')} kimlik={ig.get('id')}", flush=True)
-    except Exception as e:
-        print("Hesaplar listelenemedi:", e, flush=True)
+    def al(yol, **alan):
+        url = f"https://graph.facebook.com/v21.0/{yol}?" + urllib.parse.urlencode(dict(alan, access_token=TOKEN))
+        try:
+            with urllib.request.urlopen(url, timeout=30) as r:
+                return json.load(r).get("data", [])
+        except urllib.error.HTTPError as e:
+            print(f"{yol} okunamadı: {e.code} {e.read().decode()[:200]}", flush=True)
+        except Exception as e:
+            print(f"{yol} okunamadı:", e, flush=True)
+        return []
+    for s in al("me/accounts", fields="name,instagram_business_account{id,username}"):
+        ig = s.get("instagram_business_account") or {}
+        print(f"Sayfa: {s.get('name')} -> Instagram: {ig.get('username')} kimlik={ig.get('id')}", flush=True)
+    for b in al("me/businesses", fields="id,name"):
+        for kenar in ("owned_instagram_accounts", "instagram_accounts"):
+            for ig in al(f"{b['id']}/{kenar}", fields="id,username"):
+                print(f"Portföy {b.get('name')} ({kenar}): {ig.get('username')} kimlik={ig.get('id')}", flush=True)
 
 
 def hikaye_uret(dosya, yazi="YENİ PART PROFİLDE"):
