@@ -37,13 +37,13 @@ jobs:
         if: steps.k.outputs.var == '1'
         env:
           IG_TOKEN: ${{ secrets.IG_TOKEN }}
-          IG_USER_ID: ${{ vars.BILMECE_IG_ID }}
+          IG_USER_ID: ""  # @bilmece.sokagi hesap kimliği; boşsa gerçek paylaşım yapılmaz
           GH_TOKEN: ${{ github.token }}
           DENEME: ${{ inputs.deneme && '1' || '' }}
           TARIH: ${{ inputs.tarih }}
           SAATLER: "19"
         run: |  # kimlik yoksa film sayfasına yanlışlıkla bilmece atılmasın
-          [ -n "$IG_USER_ID" ] || [ -n "$DENEME" ] || { echo "BILMECE_IG_ID değişkeni ayarlı değil"; exit 1; }
+          [ -n "$IG_USER_ID" ] || [ -n "$DENEME" ] || { echo "bilmece.sokagi hesap kimliği workflow dosyasına yazılmamış"; exit 1; }
           python3 paylas.py bilmece/takvim.json
       - name: Deneme videosunu indirilebilir yap
         if: ${{ inputs.deneme && steps.k.outputs.var == '1' }}
