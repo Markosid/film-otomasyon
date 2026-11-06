@@ -181,7 +181,12 @@ def main():
     if i is None:
         print("Şu an paylaşılacak video yok."); return
     k = takvim[i]
-    if k.get("hazir"):  # önceden hazırlanmış video (bilmece sayfası)
+    if k.get("bilmece"):  # bilmece sayfası: videoyu kalıptan o anda üret
+        subprocess.run(["python3", "kalip.py", str(k["bilmece"])], cwd=takvim_yolu.parent, check=True)
+        Path("cikti").mkdir(exist_ok=True)
+        dosya = Path("cikti") / f"bilmece{k['bilmece']:02d}.mp4"
+        dosya.write_bytes((takvim_yolu.parent / "stok" / dosya.name).read_bytes())
+    elif k.get("hazir"):  # önceden hazırlanmış video
         Path("cikti").mkdir(exist_ok=True)
         dosya = Path("cikti") / Path(k["hazir"]).name
         dosya.write_bytes((takvim_yolu.parent / k["hazir"]).read_bytes())
@@ -203,7 +208,7 @@ def main():
     k["medya_id"] = medya
     k["paylasim_zamani"] = dt.datetime.now(TR).isoformat(timespec="minutes")
     takvim_yolu.write_text(json.dumps(takvim, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"Paylaşıldı: {k.get('film', k.get('hazir'))} -> {medya}", flush=True)
+    print(f"Paylaşıldı: {k.get('film') or k.get('hazir') or 'bilmece ' + str(k.get('bilmece'))} -> {medya}", flush=True)
     try:  # hikâye başarısız olsa da Reels paylaşımı geçerli kalır
         k["hikaye_id"] = hikaye_paylas(yukle(hikaye))
         takvim_yolu.write_text(json.dumps(takvim, ensure_ascii=False, indent=2), encoding="utf-8")
