@@ -1,0 +1,60 @@
+name: Bilmece paylaşımı (@bilmece.sokagi)
+on:
+  schedule:
+    - cron: "7,37 9-20 * * *"  # her yarım saatte bakar; 19:00 TR sırası geldiyse paylaşır
+  workflow_dispatch:
+    inputs:
+      deneme:
+        description: "Deneme (video üret ama paylaşma)"
+        type: boolean
+        default: true
+      tarih:
+        description: "Hangi günün videosu (YYYY-AA-GG, boşsa bugün)"
+        required: false
+permissions:
+  contents: write
+concurrency: paylasim
+jobs:
+  paylas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: En güncel takvimi al  # sırada bekleyen çalışma eski takvimle aynı videoyu tekrar paylaşmasın
+        run: git pull --ff-only origin main
+      - name: Paylaşım zamanı geldi mi?
+        id: k
+        env:
+          TARIH: ${{ inputs.tarih }}
+          SAATLER: "19"
+        run: python3 paylas.py bilmece/takvim.json --kontrol
+      - name: Araçları kur
+        if: steps.k.outputs.var == '1'
+        timeout-minutes: 8
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg fonts-dejavu-core
+      - name: Videoyu üret ve paylaş
+        if: steps.k.outputs.var == '1'
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+          IG_USER_ID: ${{ vars.BILMECE_IG_ID }}
+          GH_TOKEN: ${{ github.token }}
+          DENEME: ${{ inputs.deneme && '1' || '' }}
+          TARIH: ${{ inputs.tarih }}
+          SAATLER: "19"
+        run: |  # kimlik yoksa film sayfasına yanlışlıkla bilmece atılmasın
+          [ -n "$IG_USER_ID" ] || [ -n "$DENEME" ] || { echo "BILMECE_IG_ID değişkeni ayarlı değil"; exit 1; }
+          python3 paylas.py bilmece/takvim.json
+      - name: Deneme videosunu indirilebilir yap
+        if: ${{ inputs.deneme && steps.k.outputs.var == '1' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: bilmece-deneme
+          path: cikti/*.mp4
+      - name: Takvimi güncelle
+        if: ${{ !inputs.deneme && steps.k.outputs.var == '1' }}
+        run: |
+          git config user.name "paylasim-botu"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add bilmece/takvim.json
+          git diff --cached --quiet || (git commit -m "Paylaşıldı: $(date -u +%F' '%H:%M)" && git push)

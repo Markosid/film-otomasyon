@@ -13,7 +13,7 @@ from pathlib import Path
 
 API = "https://graph.instagram.com/v21.0"
 KIMLIK = "me"
-IG_USER_ID = os.environ.get("IG_USER_ID", "17841416898516422")  # eskisinema.arsivi
+IG_USER_ID = os.environ.get("IG_USER_ID") or "17841416898516422"  # boşsa eskisinema.arsivi
 TOKEN = os.environ.get("IG_TOKEN", "")
 TR = dt.timezone(dt.timedelta(hours=3))
 
@@ -93,11 +93,24 @@ def paylas(video_url, aciklama, deneme=4, dosya=None):
     sys.exit("Video Instagram tarafından işlenemedi")
 
 
-def hikaye_uret(dosya):
-    """Reels videosunun ilk 15 sn'si + "YENİ PART PROFİLDE" bandı (hikâye için)."""
+def hesaplari_listele():
+    """Token'ın erişebildiği Instagram hesaplarını ve kimliklerini yazar (yeni hesap eklerken)."""
+    url = "https://graph.facebook.com/v21.0/me/accounts?" + urllib.parse.urlencode(
+        {"fields": "name,instagram_business_account{id,username}", "access_token": TOKEN})
+    try:
+        with urllib.request.urlopen(url, timeout=30) as r:
+            for s in json.load(r).get("data", []):
+                ig = s.get("instagram_business_account") or {}
+                print(f"Sayfa: {s.get('name')} -> Instagram: {ig.get('username')} kimlik={ig.get('id')}", flush=True)
+    except Exception as e:
+        print("Hesaplar listelenemedi:", e, flush=True)
+
+
+def hikaye_uret(dosya, yazi="YENİ PART PROFİLDE"):
+    """Reels videosunun ilk 15 sn'si + bilgi bandı (hikâye için)."""
     from highlight import FONT
     hedef = dosya.with_name(dosya.stem + "_hikaye.mp4")
-    vf = (f"drawtext=fontfile={FONT}:text='YENİ PART PROFİLDE':fontsize=70:fontcolor=white:box=1:"
+    vf = (f"drawtext=fontfile={FONT}:text='{yazi}':fontsize=70:fontcolor=white:box=1:"
           "boxcolor=red@0.85:boxborderw=24:x=(w-tw)/2:y=170")
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(dosya), "-t", "15", "-vf", vf,
                     "-c:v", "libx264", "-preset", "veryfast", "-crf", "23", "-c:a", "aac", "-b:a", "128k",
@@ -127,7 +140,7 @@ def yukle(dosya):
     return f"https://github.com/{repo}/releases/download/videolar/{urllib.parse.quote(dosya.name)}"
 
 
-SAATLER = [12, 18, 21]  # TR saatiyle günün 1., 2., 3. paylaşımı
+SAATLER = [int(x) for x in os.environ.get("SAATLER", "12,18,21").split(",")]  # TR saatiyle günün paylaşımları
 
 
 def siradaki(takvim):
@@ -160,13 +173,19 @@ def main():
     if i is None:
         print("Şu an paylaşılacak video yok."); return
     k = takvim[i]
-    from tek_video import uret
-    dosya = uret(takvim, i, "cikti")
+    if k.get("hazir"):  # önceden hazırlanmış video (bilmece sayfası)
+        Path("cikti").mkdir(exist_ok=True)
+        dosya = Path("cikti") / Path(k["hazir"]).name
+        dosya.write_bytes((takvim_yolu.parent / k["hazir"]).read_bytes())
+    else:
+        from tek_video import uret
+        dosya = uret(takvim, i, "cikti")
     print("Üretildi:", dosya, flush=True)
-    hikaye = hikaye_uret(dosya)
+    hikaye = hikaye_uret(dosya, k.get("hikaye_yazi", "YENİ PART PROFİLDE"))
     print("Hikâye üretildi:", hikaye, flush=True)
     if os.environ.get("DENEME"):
         if TOKEN:
+            hesaplari_listele()
             api_sec()  # token çalışıyor mu kontrol et
         print("DENEME modu: yüklenmedi ve paylaşılmadı."); return
     api_sec()
@@ -176,7 +195,7 @@ def main():
     k["medya_id"] = medya
     k["paylasim_zamani"] = dt.datetime.now(TR).isoformat(timespec="minutes")
     takvim_yolu.write_text(json.dumps(takvim, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"Paylaşıldı: {k['film']} Part {k['part']} -> {medya}", flush=True)
+    print(f"Paylaşıldı: {k.get('film', k.get('hazir'))} -> {medya}", flush=True)
     try:  # hikâye başarısız olsa da Reels paylaşımı geçerli kalır
         k["hikaye_id"] = hikaye_paylas(yukle(hikaye))
         takvim_yolu.write_text(json.dumps(takvim, ensure_ascii=False, indent=2), encoding="utf-8")
