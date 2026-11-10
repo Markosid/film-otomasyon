@@ -1,7 +1,7 @@
 name: Instagram paylaşımı
 on:
   schedule:
-    - cron: "7,37 9-20 * * *"  # her yarım saatte bakar; 12:00, 18:00, 21:00 TR sırası geldiyse paylaşır
+    - cron: "7,37 9,10,15,16,18,19 * * *"  # yalnız 12, 18, 21 TR civarında bakar (gecikmeye karşı 1 saat yedek)
   workflow_dispatch:
     inputs:
       deneme:
