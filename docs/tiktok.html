@@ -6,7 +6,7 @@
 <button id="b" hidden>Kodu kopyala</button>
 <p>Bu kodu hemen (birkaç dakika içinde) GitHub'da <b>Actions &gt; TikTok paylaşımı &gt; Run workflow</b> ekranındaki "kod" kutusuna yapıştır.</p>
 <script>
-document.getElementById("f").onsubmit=e=>{e.preventDefault();const q=new URLSearchParams({client_key:document.getElementById("ck").value.trim(),scope:"user.info.basic,video.publish,video.upload",response_type:"code",redirect_uri:location.origin+location.pathname,state:"yaboyle"});location.href="https://www.tiktok.com/v2/auth/authorize/?"+q;};
+document.getElementById("f").onsubmit=e=>{e.preventDefault();const q=new URLSearchParams({client_key:document.getElementById("ck").value.trim(),scope:"user.info.basic,video.publish,video.upload",response_type:"code",redirect_uri:location.origin+location.pathname,state:"yaboyle",disable_auto_auth:"1"});location.href="https://www.tiktok.com/v2/auth/authorize/?"+q;};
 const p=new URLSearchParams(location.search),k=p.get("code");
 if(k){document.getElementById("f").hidden=true;document.getElementById("k").textContent=k;document.getElementById("m").textContent="Giriş başarılı. Kodun:";
 const b=document.getElementById("b");b.hidden=false;b.onclick=()=>navigator.clipboard.writeText(k).then(()=>b.textContent="Kopyalandı");}
