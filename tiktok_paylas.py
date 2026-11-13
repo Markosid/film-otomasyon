@@ -18,6 +18,7 @@ SIR = os.environ.get("TIKTOK_CLIENT_SECRET", "")
 DONUS = os.environ.get("TIKTOK_DONUS", "https://markosid.github.io/film-otomasyon/tiktok.html")
 GIZLILIK = os.environ.get("TIKTOK_GIZLILIK", "SELF_ONLY")  # denetimden sonra PUBLIC_TO_EVERYONE
 DENEME = bool(os.environ.get("DENEME"))
+TASLAK = os.environ.get("TIKTOK_MOD", "taslak") == "taslak"  # taslak: video TikTok gelen kutusuna düşer, telefondan yayınlanır
 TR = dt.timezone(dt.timedelta(hours=3))
 
 
@@ -82,18 +83,27 @@ def video_hazirla(k):
 
 
 def paylas(token, dosya, aciklama):
+    boyut = dosya.stat().st_size
+    parca = boyut if boyut <= 64_000_000 else 10_000_000
+    adet = 1 if parca == boyut else boyut // parca  # son parça artanı da alır (TikTok kuralı)
+    kaynak = {"source": "FILE_UPLOAD", "video_size": boyut, "chunk_size": parca, "total_chunk_count": adet}
+    if TASLAK:
+        print("Mod: taslak (TikTok gelen kutusuna gönderiliyor)")
+        baslat = istek(f"{API}/post/publish/inbox/video/init/", {"source_info": kaynak}, token)["data"]
+        return yukle_bekle(token, dosya, baslat, boyut, parca, adet)
     bilgi = istek(f"{API}/post/publish/creator_info/query/", {}, token)["data"]
     secenekler = bilgi.get("privacy_level_options", [])
     gizlilik = GIZLILIK if GIZLILIK in secenekler else "SELF_ONLY"
     print(f"Hesap: @{bilgi.get('creator_username')} · görünürlük: {gizlilik}")
-    boyut = dosya.stat().st_size
-    parca = boyut if boyut <= 64_000_000 else 10_000_000
-    adet = 1 if parca == boyut else boyut // parca  # son parça artanı da alır (TikTok kuralı)
     baslat = istek(f"{API}/post/publish/video/init/", {
         "post_info": {"title": aciklama[:2200], "privacy_level": gizlilik,
                       "disable_comment": False, "disable_duet": False, "disable_stitch": False},
-        "source_info": {"source": "FILE_UPLOAD", "video_size": boyut, "chunk_size": parca, "total_chunk_count": adet},
+        "source_info": kaynak,
     }, token)["data"]
+    return yukle_bekle(token, dosya, baslat, boyut, parca, adet)
+
+
+def yukle_bekle(token, dosya, baslat, boyut, parca, adet):
     with open(dosya, "rb") as f:
         for i in range(adet):
             bas = i * parca
@@ -107,7 +117,7 @@ def paylas(token, dosya, aciklama):
         time.sleep(15)
         durum = istek(f"{API}/post/publish/status/fetch/", {"publish_id": baslat["publish_id"]}, token)["data"]
         print("Durum:", durum.get("status"))
-        if durum.get("status") == "PUBLISH_COMPLETE":
+        if durum.get("status") in ("PUBLISH_COMPLETE", "SEND_TO_USER_INBOX"):
             return baslat["publish_id"]
         if durum.get("status") == "FAILED":
             sys.exit(f"Paylaşım başarısız: {durum.get('fail_reason')}")

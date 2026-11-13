@@ -35,7 +35,7 @@ jobs:
           DENEME: ${{ inputs.deneme && '1' || '' }}
         run: python3 tiktok_paylas.py
       - name: Takvimi ve anahtarı kaydet
-        if: ${{ !inputs.deneme || inputs.kod != '' }}
+        if: ${{ always() && (!inputs.deneme || inputs.kod != '') }}  # anahtar yenilendiyse hata olsa da sakla
         run: |
           git config user.name "paylasim-botu"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
