@@ -1,0 +1,45 @@
+name: TikTok paylaşımı
+on:
+  schedule:
+    - cron: "23 6-19 * * *"  # saatte bir bakar (TR 09-22); zamanı gelen video varsa paylaşır
+  workflow_dispatch:
+    inputs:
+      kod:
+        description: "İlk kurulum: TikTok giriş sayfasındaki kod (boşsa normal paylaşım)"
+        required: false
+      deneme:
+        description: "Deneme (paylaşma, sadece kontrol et)"
+        type: boolean
+        default: true
+permissions:
+  contents: write
+concurrency: tiktok
+jobs:
+  paylas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+      TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: git pull --ff-only origin main
+      - name: TikTok'u bağla
+        if: ${{ inputs.kod != '' }}
+        env:
+          KOD: ${{ inputs.kod }}
+        run: python3 tiktok_paylas.py --bagla "$KOD"
+      - name: Sıradaki videoyu paylaş
+        if: ${{ !inputs.kod }}
+        env:
+          DENEME: ${{ inputs.deneme && '1' || '' }}
+        run: python3 tiktok_paylas.py
+      - name: Takvimi ve anahtarı kaydet
+        if: ${{ !inputs.deneme || inputs.kod != '' }}
+        run: |
+          git config user.name "paylasim-botu"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tiktok/
+          git diff --cached --quiet && exit 0
+          git commit -m "TikTok: $(date -u +%F' '%H:%M)"
+          for i in 1 2 3; do git pull --rebase origin main && git push && break; sleep 5; done

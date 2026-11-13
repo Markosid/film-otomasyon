@@ -1,0 +1,14 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:system-ui,sans-serif;max-width:720px;margin:2rem auto;padding:0 16px;line-height:1.6;color:#222;background:#fff}code{background:#eee;padding:4px 8px;word-break:break-all;display:block;margin:1rem 0;font-size:1.1rem}</style><title>TikTok Bağlantısı</title></head><body>
+<h1>TikTok bağlantısı</h1>
+<form id="f"><p>1) TikTok geliştirici sayfasındaki <b>Client key</b> değerini yapıştır ve "TikTok ile giriş"e bas:</p>
+<input id="ck" style="width:100%;padding:8px;font-size:1rem" placeholder="Client key"> <button>TikTok ile giriş</button></form>
+<p id="m"></p><code id="k"></code>
+<button id="b" hidden>Kodu kopyala</button>
+<p>Bu kodu hemen (birkaç dakika içinde) GitHub'da <b>Actions &gt; TikTok paylaşımı &gt; Run workflow</b> ekranındaki "kod" kutusuna yapıştır.</p>
+<script>
+document.getElementById("f").onsubmit=e=>{e.preventDefault();const q=new URLSearchParams({client_key:document.getElementById("ck").value.trim(),scope:"user.info.basic,video.publish",response_type:"code",redirect_uri:location.origin+location.pathname,state:"yaboyle"});location.href="https://www.tiktok.com/v2/auth/authorize/?"+q;};
+const p=new URLSearchParams(location.search),k=p.get("code");
+if(k){document.getElementById("f").hidden=true;document.getElementById("k").textContent=k;document.getElementById("m").textContent="Giriş başarılı. Kodun:";
+const b=document.getElementById("b");b.hidden=false;b.onclick=()=>navigator.clipboard.writeText(k).then(()=>b.textContent="Kopyalandı");}
+else if(p.get("error")){document.getElementById("m").textContent="Hata: "+p.get("error")+" "+(p.get("error_description")||"");}
+</script></body></html>
