@@ -1,0 +1,34 @@
+name: YouTube yükleme
+on:
+  schedule:
+    - cron: "17 3 * * *"  # her gün 06:17 TR: önümüzdeki 3 günün videolarını yükleyip zamanlar
+  workflow_dispatch:
+    inputs:
+      deneme:
+        description: "Deneme (sadece listele, yükleme)"
+        type: boolean
+        default: true
+permissions:
+  contents: write
+concurrency: youtube
+jobs:
+  yukle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: git pull --ff-only origin main
+      - name: Videoları yükle
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          DENEME: ${{ inputs.deneme && '1' || '' }}
+        run: python3 youtube_yukle.py youtube/takvim.json
+      - name: Takvimi güncelle
+        if: ${{ !inputs.deneme }}
+        run: |
+          git config user.name "paylasim-botu"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add youtube/takvim.json
+          git diff --cached --quiet || (git commit -m "YouTube yüklendi: $(date -u +%F)" && git pull --rebase origin main && git push)
