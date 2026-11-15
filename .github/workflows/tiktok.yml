@@ -1,7 +1,7 @@
 name: TikTok paylaşımı
 on:
   schedule:
-    - cron: "23 6-19 * * *"  # saatte bir bakar (TR 09-22); zamanı gelen video varsa paylaşır
+    - cron: "23,53 6-21 * * *"  # yarım saatte bir bakar (TR 09-00), GitHub gecikmelerine karşı; zamanı gelen video varsa paylaşır
   workflow_dispatch:
     inputs:
       kod:
